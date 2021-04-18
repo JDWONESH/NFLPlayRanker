@@ -106,6 +106,8 @@ Logos::Logos(string filename)
 		logoMap["SD"].setTexture(logosTexture);
 		logoMap["SD"].setTextureRect(sf::IntRect(6 * length, 4 * length, length, length));
 		logoMap["SD"].setScale(0.6f, 0.6f);
+		scoreFont.loadFromFile("assets/football_font.ttf");
+		font.loadFromFile("assets/atlanta_book.ttf");
 	}
 }
 

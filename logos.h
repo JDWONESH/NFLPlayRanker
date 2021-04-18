@@ -17,4 +17,6 @@ public:
 	int adjustedLength = 117;
 	Logos(string fileName);
 	sf::Sprite& getTeamLogo(string teamName);
+	sf::Font scoreFont;
+	sf::Font font;
 };
