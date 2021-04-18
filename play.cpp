@@ -220,8 +220,8 @@ void Play::draw(sf::RenderWindow& window)
 }
 
 void Play::calcInfluence() {
-	int wpDif = home_WP_Post - home_WP_Pre;
-	if(wpDif < 0) wpDif *= -1;
+	float wpDif = home_WP_Post - home_WP_Pre;
+	if(wpDif < 0) wpDif *= -1.0f;
 	int timeRem = stoi(timeRemaining);
 	if(playType.compare("kickoff") || playType.compare("punt")) {
 		influence = 0.4f * (touchdown? 1: 0) + 0.4f * (timeRem < 240? 1 : 0) + 0.5f * wpDif;
