@@ -1,29 +1,15 @@
 #include "logos.h"
 #include "play.h"
 #include "tree.h"
+#include "heap.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <queue>
 
-
-//Used to define the comparison operator for the priority queue of Play pointers
-struct InfluenceComparison
-{
-    //Uses the member variable influence for the comparison
-    bool operator()(const Play* lhs, const Play* rhs)
-    {
-        return lhs->getInfluence() < rhs->getInfluence();
-    }
-};
-
 // Reads in data from file and constructs plays
-void load() 
+void load(AVLTree& tree, Heap& playRanksHeap) 
 {
-    //Will be used to rank the plays according to the influence member variable
-    priority_queue<Play*, vector<Play*>,InfluenceComparison> playRanksHeap;
-    AVLTree tree;
-
     //Loading the data from the file and constructing the plays
     ifstream nflData;
     nflData.open("nflData.csv");
@@ -79,13 +65,12 @@ void load()
         string playtype = vals[25];
         if(playtype.compare("pass") == 0 || playtype.compare("run") == 0 || playtype.compare("field_goal") == 0 || playtype.compare("kickoff") == 0 || playtype.compare("punt") == 0) {
 	        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
-		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93]);
+		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93], vals[20]);
             //Push into avl tree
             tree.insert(tree.getRoot(), play);
+            // Push into max heap
+            playRanksHeap.insert(play);
 		}
-        // Push into min heap
-        //playRanksHeap.push(play);
-
         //cout << count << ": " << vals[9] << endl;  // Debug: vals[i] corresponds with the value in column i starting at i = 0
         count++;
         vals.clear();
@@ -96,8 +81,10 @@ void load()
 
 int main()
 {
+    AVLTree tree;
+    Heap playRanksHeap;
     //Load data
-    load();
+    load(tree, playRanksHeap);
 
     //Creating the window to display the compilation on
     sf::RenderWindow window;
@@ -106,9 +93,8 @@ int main()
     window.setPosition(centerWindow);
     window.setKeyRepeatEnabled(true);
 
-    //Testing a play
-    //Play first("NYG", "MIA", "49", "0", "1", "15:00");
-
+    Play * curr = playRanksHeap.top();
+    playRanksHeap.remove();
     while (window.isOpen())
     {
         sf::Event event;
@@ -116,11 +102,21 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                //Left click changes play
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    delete curr;
+                    curr = playRanksHeap.top();
+                    playRanksHeap.remove();
+                }
+            }
         }
 
         window.clear(sf::Color::Black);
         //Public function of play to draw its play data onto the screen
-        //first.draw(window);
+        curr->draw(window);
         window.display();
     }
 
