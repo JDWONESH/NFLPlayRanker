@@ -3,6 +3,7 @@
 
 Logos::Logos(string filename)
 {
+	//Creating the teams' logos from an image file and storing it in a map
 	if (!logosTexture.loadFromFile(filename))
 	{
 		std::cout << "Unable to open" << std::endl;
@@ -108,8 +109,10 @@ Logos::Logos(string filename)
 	}
 }
 
+//Returns the team logo based on the given name
 sf::Sprite& Logos::getTeamLogo(string teamName)
 {
+	//Some names in the file changed through the years so this just handles that
 	if (teamName == "JAX")
 	{
 		teamName = "JAC";

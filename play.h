@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//Contains all relevant play data needed for the influence algorithm and for the visualization 
 class Play
 {
 	static Logos nflLogos;
@@ -18,7 +19,6 @@ class Play
 	string defenderTwo;
 	int down;
 	int yrdsToGo;
-	string timeSecs;
 	int yrdLine;
 	int week;
 	float winProbChange;*/
@@ -29,7 +29,13 @@ class Play
 	string homeTeamScore;
 	string awayTeamScore;
 	string quarter;
+	string timeRemaining;
+	int influence;
 public:
-	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_);
+	//Constructor
+	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_);
+	//Draws play data to the screen
 	void draw(sf::RenderWindow& window);
+	//Returns the influence of the play
+	int getInfluence() const;
 };
