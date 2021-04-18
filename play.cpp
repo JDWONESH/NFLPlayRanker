@@ -62,13 +62,20 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	else
 		away_WP_Post = -1.0;
 
-	// To do: calculate influence
+	// Calculate influence
+	this->calcInfluence();
+	
+	// AVL Tree Data
+	bf = 0;
+	left = nullptr;
+	right = nullptr;
 
 	// Debugging
-	//cout <<playDescription<<endl;
+	cout <<playDescription<<endl;
+	cout << "Influence: " << influence << endl;
 	//cout <<"date: "<<date <<" "<<",yrds gained: "<<yardsGained<<" "<<",touchdown: "<<touchdown<<" "<<",play type: "<<playType<<" "<<",yrd line: "<<yrdLine<<" "<<",sp: "<<sp<<" "<<
 	//",interception: "<<interception<<" "<<",fumble: "<<fumble<<" "<<",home pre: "<<home_WP_Pre<<" "<<",home post: "<<home_WP_Post_<<" "<<",away pre: "<<away_WP_Pre<<" "<<",away post: "<<away_WP_Post<<endl;
-	cout << "Play object succesfully created" << endl;
+	//cout << "Play object succesfully created" << endl;
 }
 
 void Play::draw(sf::RenderWindow& window)
@@ -212,14 +219,14 @@ void Play::draw(sf::RenderWindow& window)
 	}
 }
 
-int Play::calcInfluence() {
+void Play::calcInfluence() {
 	int wpDif = home_WP_Post - home_WP_Pre;
 	if(wpDif < 0) wpDif *= -1;
 	int timeRem = stoi(timeRemaining);
 	if(playType.compare("kickoff") || playType.compare("punt")) {
 		influence = 0.4f * (touchdown? 1: 0) + 0.4f * (timeRem < 240? 1 : 0) + 0.5f * wpDif;
 	} else if(playType.compare("field_goal")) {
-		int fgrange = (yardline > 50? yrdLine-50: yrdLine);
+		int fgrange = (yrdLine > 50? yrdLine-50: yrdLine);
 		
 		if(sp) influence = 0.75*fgrange + 0.5f *(timeRem < 120? 1:0) + 0.5f*wpDif;
 		else influence = 0;
@@ -235,7 +242,34 @@ int Play::calcInfluence() {
 	}
 } 
 
-int Play::getInfluence() const
+float Play::getInfluence() const
 {
 	return influence;
 }
+
+string Play::getDescription() const {
+	return playDescription;
+}
+
+// AVL Tree functions
+
+// Calculates height of a subtree (Stepik 5.2)
+int Play::treeHeight(Play* root) {
+    if(root == nullptr)    // If subtree is empty, return height of 0
+        return 0;
+    else {
+    int right = treeHeight(root->right);    // Recursively get height of right 
+    int left = treeHeight(root->left);    // Recursively get height of left
+    if(left > right)    // Return the higher one
+        return ++left;
+    else
+        return ++right;
+    }
+}
+// Calculates and sets Play's balance factor using treeHeight helper function
+void Play::setBF() {
+    int leftHeight = treeHeight(this->left);
+    int rightHeight = treeHeight(this->right);
+    this->bf = leftHeight - rightHeight;  
+}
+

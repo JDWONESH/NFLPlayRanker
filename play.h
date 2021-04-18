@@ -43,7 +43,16 @@ public:
 	//Draws play data to the screen
 	void draw(sf::RenderWindow& window);
 	//Calculates influence
-	int calcInfluence();
+	void calcInfluence();
 	//Returns the influence of the play
-	int getInfluence() const;
+	float getInfluence() const;
+	//Returns description of the play
+	string getDescription() const;
+
+	// For use in AVL tree
+	Play* left;
+	Play* right;
+	int bf;
+	void setBF();
+	int treeHeight(Play* root);
 };

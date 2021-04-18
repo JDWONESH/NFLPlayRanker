@@ -22,7 +22,7 @@ void load()
 {
     //Will be used to rank the plays according to the influence member variable
     priority_queue<Play*, vector<Play*>,InfluenceComparison> playRanksHeap;
-    //AVLTree tree;
+    AVLTree tree;
 
     //Loading the data from the file and constructing the plays
     ifstream nflData;
@@ -76,21 +76,22 @@ void load()
             }
         }
         //Create play objects
-        string playtype = vals[144];
-        if(playtype.compare("pass") || playtype.compare("run") || playtype.compare("field_goal") || playtype.compare("kickoff") || playtype.compare("punt")) {
+        string playtype = vals[25];
+        if(playtype.compare("pass") == 0 || playtype.compare("run") == 0 || playtype.compare("field_goal") == 0 || playtype.compare("kickoff") == 0 || playtype.compare("punt") == 0) {
 	        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
 		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93]);
+            //Push into avl tree
+            tree.insert(tree.getRoot(), play);
 		}
         // Push into min heap
         //playRanksHeap.push(play);
-        //Push into avl tree
-        //tree.insert(play);
 
         //cout << count << ": " << vals[9] << endl;  // Debug: vals[i] corresponds with the value in column i starting at i = 0
         count++;
         vals.clear();
     }
-    //cout << tree.printInorder(tree.getRoot(), "");
+    cout << "Influence Rankings:" << endl;
+    cout << tree.printInorder(tree.getRoot(), "");
 }
 
 int main()
