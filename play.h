@@ -34,7 +34,7 @@ class Play
 	int influence;
 public:
 	//Constructor
-	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string yrdsToGo_);
+	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string yrdsToGo_, int influence_);
 	//Draws play data to the screen
 	void draw(sf::RenderWindow& window);
 	//Returns the influence of the play

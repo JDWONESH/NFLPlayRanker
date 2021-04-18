@@ -2,7 +2,7 @@
 
 Logos Play::nflLogos = Logos("assets/nfl_logos.png");
 
-Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_)
+Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, int influence_)
 {
 	homeTeam = homeTeam_;
 	awayTeam = awayTeam_;
@@ -15,6 +15,7 @@ Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awa
 	playDescription = playDescription_;
 	down = down_;
 	ydsToGo = ydsToGo_;
+	influence = influence_;
 }
 
 void Play::draw(sf::RenderWindow& window)
@@ -109,7 +110,7 @@ void Play::draw(sf::RenderWindow& window)
 			playDesc.setString(descLine);
 			sf::FloatRect descRect = playDesc.getLocalBounds();
 			playDesc.setOrigin(descRect.left + descRect.width / 2.0f, descRect.top + descRect.height / 2.0f);
-			playDesc.setPosition(windowSize.x / 2.0f, 140.0f + spacing);
+			playDesc.setPosition(windowSize.x / 2.0f, 70.0f + spacing);
 			window.draw(playDesc);
 			spacing += 90.0f;
 			descLine = "";
@@ -123,7 +124,7 @@ void Play::draw(sf::RenderWindow& window)
 	playDesc.setString(descLine);
 	sf::FloatRect descRect = playDesc.getLocalBounds();
 	playDesc.setOrigin(descRect.left + descRect.width / 2.0f, descRect.top + descRect.height / 2.0f);
-	playDesc.setPosition(windowSize.x / 2.0f, 140.0f + spacing);
+	playDesc.setPosition(windowSize.x / 2.0f, 70.0f + spacing);
 	window.draw(playDesc);
 
 	if (down != "NA")
@@ -137,17 +138,17 @@ void Play::draw(sf::RenderWindow& window)
 		}
 		else if (down == "2")
 		{
-			downText.setString(down + "nd" + ydsToGo);
+			downText.setString(down + "nd & " + ydsToGo);
 			downText.setFillColor(sf::Color::Yellow);
 		}
 		else if (down == "3")
 		{
-			downText.setString(down + "rd" + ydsToGo);
+			downText.setString(down + "rd & " + ydsToGo);
 			downText.setFillColor(sf::Color::Yellow);
 		}
 		else
 		{
-			downText.setString(down + "th" + ydsToGo);
+			downText.setString(down + "th & " + ydsToGo);
 			downText.setFillColor(sf::Color::Red);
 		}
 		downText.setCharacterSize(100);
