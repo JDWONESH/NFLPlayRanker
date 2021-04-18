@@ -16,22 +16,30 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	timeRemaining = timeRemaining_;
 	playDescription = playDescription_;
 	down = down_;
-	ydsToGo = ydsToGo_;
+	ydsToGo = stoi(ydsToGo_);
 
 	// Assign Algo Data
 	date = date_;
-	yardsGained = yardsGained_;
+	yardsGained = stoi(yardsGained_);
+	
 	if(touchdown_.compare("NA") == 0 || stoi(touchdown_) == 0)
 		touchdown = false;
 	else
 		touchdown = true;
+		
 	playType = playType_;
-	yrdLine = yrdLine_;
-	sp = sp_;
+	yrdLine = stoi(yrdLine_);
+	
+	if(sp_.compare("NA") == 0 || stoi(sp_) == 0)
+		touchdown = false;
+	else
+		touchdown = true;
+		
 	if(interception_.compare("NA") == 0 || stoi(interception_) == 0)
 		interception = false;
 	else
 		interception = true;
+		
 	if(fumble_.compare("NA") == 0 || stoi(fumble_) == 0)
 		fumble = false;
 	else
@@ -203,6 +211,29 @@ void Play::draw(sf::RenderWindow& window)
 		window.draw(downText);
 	}
 }
+
+int Play::calcInfluence() {
+	int wpDif = home_WP_Post - home_WP_Pre;
+	if(wpDif < 0) wpDif *= -1;
+	int timeRem = stoi(timeRemaining);
+	if(playType.compare("kickoff") || playType.compare("punt")) {
+		influence = 0.4f * (touchdown? 1: 0) + 0.4f * (timeRem < 240? 1 : 0) + 0.5f * wpDif;
+	} else if(playType.compare("field_goal")) {
+		int fgrange = (yardline > 50? yrdLine-50: yrdLine);
+		
+		if(sp) influence = 0.75*fgrange + 0.5f *(timeRem < 120? 1:0) + 0.5f*wpDif;
+		else influence = 0;
+			
+	} else if(playType.compare("pass") || playType.compare("run")){
+		int yards = 0;
+		if(interception || fumble) yards = yrdLine;
+		else yards = yardsGained;
+		
+		influence = 0.6f * yards + 0.3f * (timeRem < 180? 1 : 0) + .2f * (timeRem < 360? 1:0) + 0.5f*wpDif + 0.5f * (sp ? 1:0);
+	} else {
+		influence = 0;
+	}
+} 
 
 int Play::getInfluence() const
 {
