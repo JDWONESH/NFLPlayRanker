@@ -76,8 +76,11 @@ void load()
             }
         }
         //Create play objects
-        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
-	                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93]);
+        string playtype = vals[144];
+        if(playtype.compare("pass") || playtype.compare("run") || playtype.compare("field_goal") || playtype.compare("kickoff") || playtype.compare("punt")) {
+	        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
+		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93]);
+		}
         // Push into min heap
         //playRanksHeap.push(play);
         //Push into avl tree
