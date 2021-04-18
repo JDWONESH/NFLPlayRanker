@@ -16,11 +16,14 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	timeRemaining = timeRemaining_;
 	playDescription = playDescription_;
 	down = down_;
-	ydsToGo = stoi(ydsToGo_);
+	ydsToGo = ydsToGo_;
 
 	// Assign Algo Data
 	date = date_;
-	yardsGained = stoi(yardsGained_);
+	if(yardsGained_.compare("NA") == 0)
+		yardsGained = 0;
+	else
+		yardsGained = stoi(yardsGained_);
 	
 	if(touchdown_.compare("NA") == 0 || stoi(touchdown_) == 0)
 		touchdown = false;
@@ -28,12 +31,16 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 		touchdown = true;
 		
 	playType = playType_;
-	yrdLine = stoi(yrdLine_);
+	
+	if(yrdLine_.compare("NA") == 0)
+		yrdLine = 0;
+	else
+		yrdLine = stoi(yrdLine_);
 	
 	if(sp_.compare("NA") == 0 || stoi(sp_) == 0)
-		touchdown = false;
+		sp = false;
 	else
-		touchdown = true;
+		sp = true;
 		
 	if(interception_.compare("NA") == 0 || stoi(interception_) == 0)
 		interception = false;
