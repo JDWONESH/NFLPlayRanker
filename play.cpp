@@ -2,7 +2,7 @@
 
 Logos Play::nflLogos = Logos("assets/nfl_logos.png");
 
-Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_)
+Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_)
 {
 	homeTeam = homeTeam_;
 	awayTeam = awayTeam_;
@@ -12,6 +12,9 @@ Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awa
 	scoreFont.loadFromFile("assets/football_font.ttf");
 	font.loadFromFile("assets/atlanta_book.ttf");
 	timeRemaining = timeRemaining_;
+	playDescription = playDescription_;
+	down = down_;
+	ydsToGo = ydsToGo_;
 }
 
 void Play::draw(sf::RenderWindow& window)
@@ -24,6 +27,18 @@ void Play::draw(sf::RenderWindow& window)
 	border.setOutlineColor(sf::Color::White);
 	border.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(border);
+	sf::FloatRect borderRect = border.getLocalBounds();
+	border.setOrigin(borderRect.left + borderRect.width / 2.0f, borderRect.top + borderRect.height / 2.0f);
+	border.setPosition(windowSize.x / 2.0f, windowSize.y - (borderRect.height / 2.0f));
+	window.draw(border);
+	border.setPosition(windowSize.x - 250.0f, windowSize.y - (borderRect.height / 2.0f));
+	window.draw(border);
+	sf::RectangleShape bigBorder(sf::Vector2f(windowSize.x - 24.0f, windowSize.y - 153.0f));
+	bigBorder.setPosition(12.0f, 12.0f);
+	bigBorder.setFillColor(sf::Color::Black);
+	bigBorder.setOutlineThickness(12.0f);
+	bigBorder.setOutlineColor(sf::Color::White);
+	window.draw(bigBorder);
 
 	sf::Sprite& awayLogo = nflLogos.getTeamLogo(awayTeam);
 	awayLogo.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
@@ -55,24 +70,92 @@ void Play::draw(sf::RenderWindow& window)
 
 	sf::Text quarterText;
 	quarterText.setFont(font);
-	quarterText.setString(quarter + "st");
+	if (quarter == "1")
+	{
+		quarterText.setString(quarter + "st " + timeRemaining);
+	}
+	else if (quarter == "2")
+	{
+		quarterText.setString(quarter + "nd " + timeRemaining);
+	}
+	else if (quarter == "3")
+	{
+		quarterText.setString(quarter + "rd " + timeRemaining);
+	}
+	else
+	{
+		quarterText.setString(quarter + "th " + timeRemaining);
+	}
 	quarterText.setCharacterSize(100);
 	quarterText.setFillColor(sf::Color::White);
 	sf::FloatRect quarterRect = quarterText.getLocalBounds();
 	quarterText.setOrigin(quarterRect.left + quarterRect.width / 2.0f, quarterRect.top + quarterRect.height / 2.0f);
-	quarterText.setPosition(12.0f + nflLogos.adjustedLength * 5.0f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
+	quarterText.setPosition(windowSize.x / 2.0f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
 	window.draw(quarterText);
 
-	sf::Text timeText;
-	timeText.setFont(font);
-	timeText.setString(timeRemaining);
-	timeText.setCharacterSize(100);
-	timeText.setFillColor(sf::Color::White);
-	sf::FloatRect timeRect = timeText.getLocalBounds();
-	timeText.setOrigin(timeRect.left + timeRect.width / 2.0f, timeRect.top + timeRect.height / 2.0f);
-	timeText.setPosition(12.0f + nflLogos.adjustedLength * 7.0f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
-	window.draw(timeText);
+	sf::Text playDesc;
+	playDesc.setFont(font);
+	playDesc.setCharacterSize(90);
+	playDesc.setFillColor(sf::Color::White);
+	int count = 0;
+	float spacing = 0.0f;
+	string descLine;
+	for (int i = 0; i < playDescription.size(); i++)
+	{
+		if (count > 16 && playDescription[i] == ' ')
+		{
+			count = 0;
+			descLine += playDescription[i];
+			playDesc.setString(descLine);
+			sf::FloatRect descRect = playDesc.getLocalBounds();
+			playDesc.setOrigin(descRect.left + descRect.width / 2.0f, descRect.top + descRect.height / 2.0f);
+			playDesc.setPosition(windowSize.x / 2.0f, 140.0f + spacing);
+			window.draw(playDesc);
+			spacing += 90.0f;
+			descLine = "";
+		}
+		else
+		{
+			count++;
+			descLine += playDescription[i];
+		}
+	}
+	playDesc.setString(descLine);
+	sf::FloatRect descRect = playDesc.getLocalBounds();
+	playDesc.setOrigin(descRect.left + descRect.width / 2.0f, descRect.top + descRect.height / 2.0f);
+	playDesc.setPosition(windowSize.x / 2.0f, 140.0f + spacing);
+	window.draw(playDesc);
 
+	if (down != "NA")
+	{
+		sf::Text downText;
+		downText.setFont(font);
+		if (down == "1")
+		{
+			downText.setString(down + "st & " + ydsToGo);
+			downText.setFillColor(sf::Color::Yellow);
+		}
+		else if (down == "2")
+		{
+			downText.setString(down + "nd" + ydsToGo);
+			downText.setFillColor(sf::Color::Yellow);
+		}
+		else if (down == "3")
+		{
+			downText.setString(down + "rd" + ydsToGo);
+			downText.setFillColor(sf::Color::Yellow);
+		}
+		else
+		{
+			downText.setString(down + "th" + ydsToGo);
+			downText.setFillColor(sf::Color::Red);
+		}
+		downText.setCharacterSize(100);
+		sf::FloatRect downRect = downText.getLocalBounds();
+		downText.setOrigin(downRect.left + downRect.width / 2.0f, downRect.top + downRect.height / 2.0f);
+		downText.setPosition(windowSize.x - 250.0f, windowSize.y - (borderRect.height / 2.0f));
+		window.draw(downText);
+	}
 }
 
 int Play::getInfluence() const
