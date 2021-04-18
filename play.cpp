@@ -52,22 +52,23 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	else
 		fumble = true;
 
-	if(home_WP_Pre_.compare("NA") != 0)
-		home_WP_Pre =  stof(home_WP_Pre_);
-	else
-		home_WP_Pre = -1.0;
-	if(away_WP_Pre_.compare("NA") != 0)
+	if(away_WP_Pre_.compare("NA") != 0 && away_WP_Post_.compare("NA") != 0) {
 		away_WP_Pre =  stof(away_WP_Pre_);
-	else
-		away_WP_Pre = -1.0;
-	if(home_WP_Post_.compare("NA") != 0)
-		home_WP_Post =  stof(home_WP_Post_);
-	else
-		home_WP_Pre = -1.0;
-	if(away_WP_Post_.compare("NA") != 0)
-		away_WP_Post =  stof(away_WP_Post_);
-	else
-		away_WP_Post = -1.0;
+		away_WP_Post = stof(away_WP_Post_);
+	}
+	else {
+		away_WP_Pre = 0.0;
+		away_WP_Post = 0.0;
+	}
+	
+	if(home_WP_Pre_.compare("NA") != 0 && home_WP_Post_.compare("NA") != 0) {
+		home_WP_Pre =  stof(home_WP_Pre_);
+		home_WP_Post = stof(home_WP_Post_);
+	}
+	else {
+		home_WP_Pre = 0.0;
+		home_WP_Post = 0.0;
+	}
 
 	// Calculate influence
 	this->calcInfluence();
@@ -226,28 +227,35 @@ void Play::draw(sf::RenderWindow& window)
 	}
 }
 
-void Play::calcInfluence() {
+int Play::calcInfluence() {
 	float wpDif = home_WP_Post - home_WP_Pre;
 	if(wpDif < 0) wpDif *= -1.0f;
-	int timeRem = stoi(timeRemaining);
-	if(playType.compare("kickoff") || playType.compare("punt")) {
-		influence = 0.4f * (touchdown? 1: 0) + 0.4f * (timeRem < 240? 1 : 0) + 0.5f * wpDif;
-	} else if(playType.compare("field_goal")) {
+	
+	int timeRem = 0;
+	if(timeRemaining.compare("NA") != 0) {
+		timeRem = stoi(timeRemaining);
+		//cout << stoi(timeRemaining)<< endl;
+	}
+	
+	
+	if(playType.compare("kickoff") == 0 || playType.compare("punt") == 0) {
+		influence = (touchdown? 0.4f: 0.0f) + (timeRem < 120? 0.4f : 0.0f) + (timeRem < 60? 0.4f : 0.0f) + 0.5f*wpDif;
+	} else if(playType.compare("field_goal") == 0) {
 		int fgrange = (yrdLine > 50? yrdLine-50: yrdLine);
 		
-		if(sp) influence = 0.75*fgrange + 0.5f *(timeRem < 120? 1:0) + 0.5f*wpDif;
+		if(sp) influence = 0.75f * (fgrange/50.0f) + (timeRem < 120? 0.5f : 0.0f) + 0.5f*wpDif;
 		else influence = 0;
 			
-	} else if(playType.compare("pass") || playType.compare("run")){
+	} else if(playType.compare("pass")  == 0 || playType.compare("run") == 0){
 		int yards = 0;
 		if(interception || fumble) yards = yrdLine;
 		else yards = yardsGained;
 		
-		influence = 0.6f * yards + 0.3f * (timeRem < 180? 1 : 0) + .2f * (timeRem < 360? 1:0) + 0.5f*wpDif + 0.5f * (sp ? 1:0);
+		influence = 0.006f * yards + (timeRem < 180? 0.3f : 0.0f) + (timeRem < 360? 0.2f : 0.0f) + 0.5f*wpDif + 0.5f * (sp ? 1:0);
 	} else {
 		influence = 0;
 	}
-} 
+}
 
 float Play::getInfluence() const
 {
