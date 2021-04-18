@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
-#include<stack>
 
 // Reads in data from file and constructs plays
 void load(AVLTree& tree, Heap& playRanksHeap) 
@@ -84,7 +83,7 @@ int main()
 {
     AVLTree tree;
     Heap playRanksHeap;
-    stack<Play*> navStack;
+    queue<Play*> navQueue;
     //Load data
     load(tree, playRanksHeap);
 
@@ -109,14 +108,14 @@ int main()
                 //Left click changes play
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    navStack.push(curr);
+                    navQueue.push(curr);
                     curr = playRanksHeap.top();
                     playRanksHeap.remove();
                 }
-                if (event.mouseButton.button == sf::Mouse::Right && !navStack.empty()) {
-                    playRanksHeap.insert(navStack.top());
-                    curr = navStack.top();
-                    navStack.pop();
+                if (event.mouseButton.button == sf::Mouse::Right && !navQueue.empty()) {
+                    playRanksHeap.insert(navQueue.front());
+                    curr = navQueue.front();
+                    navQueue.pop();
                 }
             }
         }
