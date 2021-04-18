@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
+#include<stack>
 
 // Reads in data from file and constructs plays
 void load(AVLTree& tree, Heap& playRanksHeap) 
@@ -24,7 +25,7 @@ void load(AVLTree& tree, Heap& playRanksHeap)
     string temp; 
     int count = 0;
     //while(nflData.good())
-    for(int i = 0; i < 10000; i++)  // Adjust this loop to alter how many plays to create
+    for(int i = 0; i < 50000; i++)  // Adjust this loop to alter how many plays to create
     {
         for (int j = 0; j < 254; j++)
         {
@@ -83,6 +84,7 @@ int main()
 {
     AVLTree tree;
     Heap playRanksHeap;
+    stack<Play*> navStack;
     //Load data
     load(tree, playRanksHeap);
 
@@ -107,9 +109,14 @@ int main()
                 //Left click changes play
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    delete curr;
+                    navStack.push(curr);
                     curr = playRanksHeap.top();
                     playRanksHeap.remove();
+                }
+                if (event.mouseButton.button == sf::Mouse::Right && !navStack.empty()) {
+                    playRanksHeap.insert(navStack.top());
+                    curr = navStack.top();
+                    navStack.pop();
                 }
             }
         }
