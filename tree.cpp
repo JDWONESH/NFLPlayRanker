@@ -40,7 +40,7 @@ void AVLTree::fillInorderVec(Play* root) {
  // ========== Public Functions ==========
 // Inserts student object into tree and rotates if needed
 Play* AVLTree::insert(Play* root, Play* toInsert){
-    int currInfluence = toInsert->getInfluence();
+    float currInfluence = toInsert->getInfluence();
     // Standard BST Insertion (Stepik 4.3.2)
     if(searchID(this->getRoot(), currInfluence))
         return nullptr;
