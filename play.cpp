@@ -3,7 +3,7 @@
 Logos Play::nflLogos = Logos("assets/nfl_logos.png");
 
 Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, 
-		string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_)
+		string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_, string textTimeRemaining_)
 {
 	// Assign Display Data
 	homeTeam = homeTeam_;
@@ -11,8 +11,7 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	homeTeamScore = homeTeamScore_;
 	awayTeamScore = awayTeamScore_;
 	quarter = quarter_;
-	//scoreFont.loadFromFile("assets/football_font.ttf");
-	//font.loadFromFile("assets/atlanta_book.ttf");
+	textTimeRemaining = textTimeRemaining_;
 	timeRemaining = timeRemaining_;
 	playDescription = playDescription_;
 	down = down_;
@@ -79,8 +78,8 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	right = nullptr;
 
 	// Debugging
-	cout <<playDescription<<endl;
-	cout << "Influence: " << influence << endl;
+	//cout <<playDescription<<endl;
+	//cout << "Influence: " << influence << endl;
 	//cout <<"date: "<<date <<" "<<",yrds gained: "<<yardsGained<<" "<<",touchdown: "<<touchdown<<" "<<",play type: "<<playType<<" "<<",yrd line: "<<yrdLine<<" "<<",sp: "<<sp<<" "<<
 	//",interception: "<<interception<<" "<<",fumble: "<<fumble<<" "<<",home pre: "<<home_WP_Pre<<" "<<",home post: "<<home_WP_Post_<<" "<<",away pre: "<<away_WP_Pre<<" "<<",away post: "<<away_WP_Post<<endl;
 	//cout << "Play object succesfully created" << endl;
@@ -114,7 +113,7 @@ void Play::draw(sf::RenderWindow& window)
 	window.draw(awayLogo);
 
 	sf::Text awayScore;
-	awayScore.setFont(scoreFont);
+	awayScore.setFont(nflLogos.scoreFont);
 	awayScore.setString(awayTeamScore);
 	awayScore.setCharacterSize(100);
 	awayScore.setFillColor(sf::Color::White);
@@ -128,7 +127,7 @@ void Play::draw(sf::RenderWindow& window)
 	window.draw(homeLogo);
 	
 	sf::Text homeScore;
-	homeScore.setFont(scoreFont);
+	homeScore.setFont(nflLogos.scoreFont);
 	homeScore.setString(homeTeamScore);
 	homeScore.setCharacterSize(100);
 	homeScore.setFillColor(sf::Color::White);
@@ -138,22 +137,22 @@ void Play::draw(sf::RenderWindow& window)
 	window.draw(homeScore);
 
 	sf::Text quarterText;
-	quarterText.setFont(font);
+	quarterText.setFont(nflLogos.font);
 	if (quarter == "1")
 	{
-		quarterText.setString(quarter + "st " + timeRemaining);
+		quarterText.setString(quarter + "st " + textTimeRemaining);
 	}
 	else if (quarter == "2")
 	{
-		quarterText.setString(quarter + "nd " + timeRemaining);
+		quarterText.setString(quarter + "nd " + textTimeRemaining);
 	}
 	else if (quarter == "3")
 	{
-		quarterText.setString(quarter + "rd " + timeRemaining);
+		quarterText.setString(quarter + "rd " + textTimeRemaining);
 	}
 	else
 	{
-		quarterText.setString(quarter + "th " + timeRemaining);
+		quarterText.setString(quarter + "th " + textTimeRemaining);
 	}
 	quarterText.setCharacterSize(100);
 	quarterText.setFillColor(sf::Color::White);
@@ -163,15 +162,24 @@ void Play::draw(sf::RenderWindow& window)
 	window.draw(quarterText);
 
 	sf::Text playDesc;
-	playDesc.setFont(font);
-	playDesc.setCharacterSize(90);
+	playDesc.setFont(nflLogos.font);
+	int large = 0;
+	if (playDescription.size() > 120)
+	{
+		playDesc.setCharacterSize(60);
+		large = 12;
+	}
+	else
+	{
+		playDesc.setCharacterSize(90);
+	}
 	playDesc.setFillColor(sf::Color::White);
 	int count = 0;
 	float spacing = 0.0f;
 	string descLine;
 	for (int i = 0; i < playDescription.size(); i++)
 	{
-		if (count > 16 && playDescription[i] == ' ')
+		if ((count > 16 + large) && (playDescription[i] == ' '))
 		{
 			count = 0;
 			descLine += playDescription[i];
@@ -180,7 +188,7 @@ void Play::draw(sf::RenderWindow& window)
 			playDesc.setOrigin(descRect.left + descRect.width / 2.0f, descRect.top + descRect.height / 2.0f);
 			playDesc.setPosition(windowSize.x / 2.0f, 70.0f + spacing);
 			window.draw(playDesc);
-			spacing += 90.0f;
+			spacing += 90.0f - (2.0f * large);
 			descLine = "";
 		}
 		else
@@ -198,7 +206,7 @@ void Play::draw(sf::RenderWindow& window)
 	if (down != "NA")
 	{
 		sf::Text downText;
-		downText.setFont(font);
+		downText.setFont(nflLogos.font);
 		if (down == "1")
 		{
 			downText.setString(down + "st & " + ydsToGo);
@@ -227,7 +235,7 @@ void Play::draw(sf::RenderWindow& window)
 	}
 }
 
-int Play::calcInfluence() {
+void Play::calcInfluence() {
 	float wpDif = home_WP_Post - home_WP_Pre;
 	if(wpDif < 0) wpDif *= -1.0f;
 	
