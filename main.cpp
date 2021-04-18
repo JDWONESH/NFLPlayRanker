@@ -38,7 +38,7 @@ void load()
     string temp; 
     int count = 0;
     //while(nflData.good())
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 10000; i++)  // Adjust this loop to alter how many plays to create
     {
         for (int j = 0; j < 254; j++)
         {
@@ -75,13 +75,15 @@ void load()
                 vals[j] = line;
             }
         }
-        //Push into min heap
-        //Play* play = new Play(vals[2], vals[3], vals[0], vals[0], vals[0], vals[0]);
+        //Create play objects
+        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
+	                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93]);
+        // Push into min heap
         //playRanksHeap.push(play);
         //Push into avl tree
-        //tree.insert(tree.getRoot(), stoi(vals[0]), -1);
+        //tree.insert(play);
 
-        cout << count << ": " << vals[24] << endl;  // Debug: vals[i] corresponds with the value in column i starting at i = 0
+        //cout << count << ": " << vals[9] << endl;  // Debug: vals[i] corresponds with the value in column i starting at i = 0
         count++;
         vals.clear();
     }

@@ -2,20 +2,65 @@
 
 Logos Play::nflLogos = Logos("assets/nfl_logos.png");
 
-Play::Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, int influence_)
+Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, 
+		string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_)
 {
+	// Assign Display Data
 	homeTeam = homeTeam_;
 	awayTeam = awayTeam_;
 	homeTeamScore = homeTeamScore_;
 	awayTeamScore = awayTeamScore_;
 	quarter = quarter_;
-	scoreFont.loadFromFile("assets/football_font.ttf");
-	font.loadFromFile("assets/atlanta_book.ttf");
+	//scoreFont.loadFromFile("assets/football_font.ttf");
+	//font.loadFromFile("assets/atlanta_book.ttf");
 	timeRemaining = timeRemaining_;
 	playDescription = playDescription_;
 	down = down_;
 	ydsToGo = ydsToGo_;
-	influence = influence_;
+
+	// Assign Algo Data
+	date = date_;
+	yardsGained = yardsGained_;
+	if(touchdown_.compare("NA") == 0 || stoi(touchdown_) == 0)
+		touchdown = false;
+	else
+		touchdown = true;
+	playType = playType_;
+	yrdLine = yrdLine_;
+	sp = sp_;
+	if(interception_.compare("NA") == 0 || stoi(interception_) == 0)
+		interception = false;
+	else
+		interception = true;
+	if(fumble_.compare("NA") == 0 || stoi(fumble_) == 0)
+		fumble = false;
+	else
+		fumble = true;
+
+	if(home_WP_Pre_.compare("NA") != 0)
+		home_WP_Pre =  stof(home_WP_Pre_);
+	else
+		home_WP_Pre = -1.0;
+	if(away_WP_Pre_.compare("NA") != 0)
+		away_WP_Pre =  stof(away_WP_Pre_);
+	else
+		away_WP_Pre = -1.0;
+	if(home_WP_Post_.compare("NA") != 0)
+		home_WP_Post =  stof(home_WP_Post_);
+	else
+		home_WP_Pre = -1.0;
+	if(away_WP_Post_.compare("NA") != 0)
+		away_WP_Post =  stof(away_WP_Post_);
+	else
+		away_WP_Post = -1.0;
+
+	// To do: calculate influence
+
+	// Debugging
+	//cout <<playDescription<<endl;
+	//cout <<"date: "<<date <<" "<<",yrds gained: "<<yardsGained<<" "<<",touchdown: "<<touchdown<<" "<<",play type: "<<playType<<" "<<",yrd line: "<<yrdLine<<" "<<",sp: "<<sp<<" "<<
+	//",interception: "<<interception<<" "<<",fumble: "<<fumble<<" "<<",home pre: "<<home_WP_Pre<<" "<<",home post: "<<home_WP_Post_<<" "<<",away pre: "<<away_WP_Pre<<" "<<",away post: "<<away_WP_Post<<endl;
+	cout << "Play object succesfully created" << endl;
 }
 
 void Play::draw(sf::RenderWindow& window)
