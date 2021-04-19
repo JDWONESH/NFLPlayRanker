@@ -7,6 +7,7 @@
 #include <fstream>
 #include <queue>
 #include <stack>
+#include <sstream>
 
 // Reads in data from file and constructs plays
 void load(AVLTree& tree, Heap& playRanksHeap) 
@@ -92,6 +93,24 @@ void drawPlayRank(sf::RenderWindow& window, int rank) {
     window.draw(playRank);
 }
 
+// Handles click on YT button
+void handleYoutubeClick(string description) {
+    string link = "start https://www.youtube.com/results?search_query=";
+    std::istringstream buf(description);
+    std::istream_iterator<std::string> beg(buf), end;
+    std::vector<std::string> words(beg, end);
+
+    string toAdd = "";
+    for(int i = 0; i < words.size(); i++) {
+        toAdd.append(words[i]);
+        if(i != words.size()-1)
+            toAdd.append("+");
+    }
+    link += toAdd;
+    system(link.c_str());
+
+}
+
 int main()
 {
     AVLTree tree;
@@ -108,22 +127,39 @@ int main()
     window.create(sf::VideoMode(1500, 700), "2009 -2018 Greatest NFL Plays Compilation", sf::Style::Titlebar | sf::Style::Close);
     window.setPosition(centerWindow);
     window.setKeyRepeatEnabled(true);
+    sf::Sprite youtube;
+    sf::Texture youtubeT;
+    youtubeT.loadFromFile("assets/youtube.png");
+    youtube.setTexture(youtubeT);
+    youtube.setScale(.05, .05);
+    youtube.setPosition(1420.f, 20.f);
 
     Play * curr = playRanksHeap.top();
     playRanksHeap.remove();
     while (window.isOpen())
     {
+        auto mouse_pos = sf::Mouse::getPosition(window); // Mouse position relative to the window
+        auto translated_pos = window.mapPixelToCoords(mouse_pos); // Mouse position translated into world coordinates
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            // Hover over YT button
+            if(youtube.getGlobalBounds().contains(translated_pos)) {
+                youtube.setColor(sf::Color::Red);
+            } else {
+                youtube.setColor(sf::Color::White);
+            }
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 //Left click changes play
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if(navStackForward.empty()) {
+                    if(youtube.getGlobalBounds().contains(translated_pos)) {
+                        handleYoutubeClick(curr->getDescription());
+                    }
+                    else if(navStackForward.empty()) {
                         navStackBack.push(curr);
                         curr = playRanksHeap.top();
                         playRanksHeap.remove();
@@ -149,6 +185,8 @@ int main()
         curr->draw(window);
         //Draws current play rank
         drawPlayRank(window, playRank);
+        //Draw YT button
+        window.draw(youtube);
         window.display();
     }
 
