@@ -90,14 +90,14 @@ void Play::draw(sf::RenderWindow& window)
 {
 	sf::Vector2u windowSize = window.getSize();
 
-	sf::RectangleShape border(sf::Vector2f(4.0f * nflLogos.adjustedLength + 36.0f, nflLogos.adjustedLength));
+	sf::RectangleShape border(sf::Vector2f(4.0f * nflLogos.adjustedLength + 48.0f, nflLogos.adjustedLength));
 	border.setFillColor(sf::Color::Black);
 	border.setOutlineThickness(12.0f);
 	border.setOutlineColor(sf::Color::White);
 	border.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(border);
 
-	sf::RectangleShape timeBorder(sf::Vector2f(4.0f * nflLogos.adjustedLength - 12.0f, nflLogos.adjustedLength));
+	sf::RectangleShape timeBorder(sf::Vector2f(4.0f * nflLogos.adjustedLength - 24.0f, nflLogos.adjustedLength));
 	sf::FloatRect borderRect = timeBorder.getLocalBounds();
 	timeBorder.setOrigin(borderRect.left + borderRect.width / 2.0f, borderRect.top + borderRect.height / 2.0f);
 	timeBorder.setPosition(windowSize.x / 2.0f, windowSize.y - ((borderRect.height / 2.0f) + 12.0f));
@@ -106,7 +106,8 @@ void Play::draw(sf::RenderWindow& window)
 	timeBorder.setOutlineColor(sf::Color::White);
 	window.draw(timeBorder);
 
-	border.setPosition(windowSize.x - 512.0f, windowSize.y - (borderRect.height + 12.0f));
+	border.setPosition(windowSize.x - 524.0f, windowSize.y - (borderRect.height + 12.0f));
+	border.setSize(sf::Vector2f(4.0f * nflLogos.adjustedLength + 44.0f, nflLogos.adjustedLength));
 	window.draw(border);
 
 	sf::RectangleShape bigBorder(sf::Vector2f(windowSize.x - 24.0f, windowSize.y - 153.0f));
@@ -176,7 +177,14 @@ void Play::draw(sf::RenderWindow& window)
 	{
 		quarterText.setString(quarter + "th " + textTimeRemaining);
 	}
-	quarterText.setCharacterSize(100);
+	if (textTimeRemaining.size() > 6)
+	{
+		quarterText.setCharacterSize(80);
+	}
+	else
+	{
+		quarterText.setCharacterSize(100);
+	}
 	quarterText.setFillColor(sf::Color::White);
 	sf::FloatRect quarterRect = quarterText.getLocalBounds();
 	quarterText.setOrigin(quarterRect.left + quarterRect.width / 2.0f, quarterRect.top + quarterRect.height / 2.0f);
@@ -260,7 +268,7 @@ void Play::draw(sf::RenderWindow& window)
 		downText.setCharacterSize(100);
 		sf::FloatRect downRect = downText.getLocalBounds();
 		downText.setOrigin(downRect.left + downRect.width / 2.0f, downRect.top + downRect.height / 2.0f);
-		downText.setPosition(windowSize.x - 262.0f, windowSize.y - ((borderRect.height / 2.0f) + 12.0f));
+		downText.setPosition(windowSize.x - 270.0f, windowSize.y - ((borderRect.height / 2.0f) + 12.0f));
 		window.draw(downText);
 	}
 }

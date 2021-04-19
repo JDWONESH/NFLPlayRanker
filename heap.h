@@ -6,7 +6,7 @@
 class Heap
 {
     int size;
-    Play* playHeap[415000];
+    Play* playHeap[449000];
     public:
     Heap();
     Play* top();

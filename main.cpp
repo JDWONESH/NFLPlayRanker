@@ -25,7 +25,7 @@ void load(AVLTree& tree, Heap& playRanksHeap)
     string temp; 
     int count = 0;
     //while(nflData.good())
-    for(int i = 0; i < 50000; i++)  // Adjust this loop to alter how many plays to create
+    for(int i = 0; i < 449000; i++)  // Adjust this loop to alter how many plays to create
     {
         for (int j = 0; j < 254; j++)
         {
