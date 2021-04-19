@@ -194,6 +194,7 @@ int main()
                         playRank++;
                     }
                 }
+                //Right click goes to previous play
                 if (event.mouseButton.button == sf::Mouse::Right && !navStackBack.empty()) {
                     navStackForward.push(curr);
                     curr = navStackBack.top();

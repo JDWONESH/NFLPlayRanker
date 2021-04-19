@@ -1,17 +1,19 @@
 #include "heap.h"
 
+//Default constructor
 Heap::Heap()
 {
     size = 0;
 }
-
+//Returns top ranked play
 Play* Heap::top()
 {
     return playHeap[0];
 }
-
+//Max heap insertion
 void Heap::insert(Play* play)
 {
+    //Inserts the new play at the bottom right of tree and does heapifyUp
     int child = size;
     int parent = (child - 1) / 2;
     playHeap[child] =  play;
@@ -25,9 +27,10 @@ void Heap::insert(Play* play)
         parent = (child - 1) / 2;
     }
 }
-
+//Max heap deletion
 void Heap::remove()
 {
+    //Removes the top element by swapping with bottom right and removing the bottom right element. Then does heapifyDown on new root 
    size--;
    if (size > 0)
    {

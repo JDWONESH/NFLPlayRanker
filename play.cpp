@@ -86,10 +86,13 @@ Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string aw
 	//cout << "Play object succesfully created" << endl;
 }
 
+//Draws all the play data to the window
 void Play::draw(sf::RenderWindow& window)
 {
+	//Keeps track of window size
 	sf::Vector2u windowSize = window.getSize();
 
+	//Used for the border around the score
 	sf::RectangleShape border(sf::Vector2f(4.0f * nflLogos.adjustedLength + 48.0f, nflLogos.adjustedLength));
 	border.setFillColor(sf::Color::Black);
 	border.setOutlineThickness(12.0f);
@@ -97,6 +100,7 @@ void Play::draw(sf::RenderWindow& window)
 	border.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(border);
 
+	//Used for the border around the time
 	sf::RectangleShape timeBorder(sf::Vector2f(4.0f * nflLogos.adjustedLength - 24.0f, nflLogos.adjustedLength));
 	sf::FloatRect borderRect = timeBorder.getLocalBounds();
 	timeBorder.setOrigin(borderRect.left + borderRect.width / 2.0f, borderRect.top + borderRect.height / 2.0f);
@@ -106,10 +110,12 @@ void Play::draw(sf::RenderWindow& window)
 	timeBorder.setOutlineColor(sf::Color::White);
 	window.draw(timeBorder);
 
+	//Used for the border around the down and distance
 	border.setPosition(windowSize.x - 524.0f, windowSize.y - (borderRect.height + 12.0f));
 	border.setSize(sf::Vector2f(4.0f * nflLogos.adjustedLength + 44.0f, nflLogos.adjustedLength));
 	window.draw(border);
 
+	//Used for the big border around the screen
 	sf::RectangleShape bigBorder(sf::Vector2f(windowSize.x - 24.0f, windowSize.y - 153.0f));
 	bigBorder.setPosition(12.0f, 12.0f);
 	bigBorder.setFillColor(sf::Color::Black);
@@ -117,6 +123,7 @@ void Play::draw(sf::RenderWindow& window)
 	bigBorder.setOutlineColor(sf::Color::White);
 	window.draw(bigBorder);
 
+	//Outlines in gold the team with the ball
 	sf::RectangleShape ball(sf::Vector2f(12.0f + (2.0f * nflLogos.adjustedLength), nflLogos.adjustedLength));
 	ball.setFillColor(sf::Color::Black);
 	ball.setOutlineThickness(12.0f);
@@ -131,10 +138,12 @@ void Play::draw(sf::RenderWindow& window)
 	}
 	window.draw(ball);
 
+	//Away team's logo
 	sf::Sprite& awayLogo = nflLogos.getTeamLogo(awayTeam);
 	awayLogo.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(awayLogo);
 
+	//Away team's score
 	sf::Text awayScore;
 	awayScore.setFont(nflLogos.scoreFont);
 	awayScore.setString(awayTeamScore);
@@ -145,10 +154,12 @@ void Play::draw(sf::RenderWindow& window)
 	awayScore.setPosition(12.0f + nflLogos.adjustedLength * 1.5f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
 	window.draw(awayScore);
 
+	//Home team's logo
 	sf::Sprite& homeLogo = nflLogos.getTeamLogo(homeTeam);
 	homeLogo.setPosition(36.0f + nflLogos.adjustedLength * 2.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(homeLogo);
-	
+
+	//Home team's score
 	sf::Text homeScore;
 	homeScore.setFont(nflLogos.scoreFont);
 	homeScore.setString(homeTeamScore);
@@ -159,6 +170,7 @@ void Play::draw(sf::RenderWindow& window)
 	homeScore.setPosition(36.0f + nflLogos.adjustedLength * 3.5f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
 	window.draw(homeScore);
 
+	//The quarter and time remaining
 	sf::Text quarterText;
 	quarterText.setFont(nflLogos.font);
 	if (quarter == "1")
@@ -191,6 +203,7 @@ void Play::draw(sf::RenderWindow& window)
 	quarterText.setPosition(windowSize.x / 2.0f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
 	window.draw(quarterText);
 
+	//The play description
 	sf::Text playDesc;
 	playDesc.setFont(nflLogos.font);
 	int large = 0;
@@ -241,6 +254,7 @@ void Play::draw(sf::RenderWindow& window)
 	playDesc.setPosition(windowSize.x / 2.0f, 70.0f + spacing);
 	window.draw(playDesc);
 
+	//The down and distance
 	if (down != "NA")
 	{
 		sf::Text downText;
@@ -273,6 +287,7 @@ void Play::draw(sf::RenderWindow& window)
 	}
 }
 
+//Algorithm to calculate the influence value for each play
 void Play::calcInfluence() {
 	float wpDif = home_WP_Post - home_WP_Pre;
 	if(wpDif < 0) wpDif *= -1.0f;
