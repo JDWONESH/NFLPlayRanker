@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include <queue>
 #include <stack>
 
@@ -147,8 +148,15 @@ int main()
     youtube.setScale(.05, .05);
     youtube.setPosition(1420.f, 20.f);
 
-    //Load data
+    //Load data and time load
+    auto start = chrono::high_resolution_clock::now();
     load(tree, playRanksHeap, window);
+    auto stop = chrono::high_resolution_clock::now();
+    auto time = chrono::duration_cast<chrono::milliseconds>(stop-start);
+    string timeString = to_string(time.count());
+    timeString.insert(timeString.size()-3, ".");
+    cout << endl << "Load time: " << timeString << " s" << endl;
+
     Play * curr = playRanksHeap.top();
     playRanksHeap.remove();
     while (window.isOpen())
