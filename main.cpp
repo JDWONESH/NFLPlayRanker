@@ -5,13 +5,28 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <queue>
 #include <stack>
-#include <sstream>
+
 
 // Reads in data from file and constructs plays
-void load(AVLTree& tree, Heap& playRanksHeap) 
+void load(AVLTree& tree, Heap& playRanksHeap, sf::RenderWindow& window) 
 {
+    // Load screen
+    string loadString;
+    sf::Text loadText;
+    sf::Font font;
+    font.loadFromFile("assets/atlanta_book.ttf");
+	loadText.setFont(font);
+    loadText.setCharacterSize(75);
+	loadText.setPosition(430.0f, 250.0f);
+    loadString = "Loading Plays...";
+    loadText.setString(loadString);
+    window.clear(sf::Color::Black);
+    window.draw(loadText); 
+    window.display();
+
     //Loading the data from the file and constructing the plays
     ifstream nflData;
     nflData.open("nflData.csv");
@@ -25,7 +40,6 @@ void load(AVLTree& tree, Heap& playRanksHeap)
     bool onDesc = true; 
     string temp; 
     int count = 0;
-    //while(nflData.good())
     for(int i = 0; i < 449000; i++)  // Adjust this loop to alter how many plays to create
     {
         for (int j = 0; j < 254; j++)
@@ -118,8 +132,6 @@ int main()
     stack<Play*> navStackBack;
     stack<Play*> navStackForward;
     int playRank = 1;
-    //Load data
-    load(tree, playRanksHeap);
 
     //Creating the window to display the compilation on
     sf::RenderWindow window;
@@ -127,6 +139,7 @@ int main()
     window.create(sf::VideoMode(1500, 700), "2009 -2018 Greatest NFL Plays Compilation", sf::Style::Titlebar | sf::Style::Close);
     window.setPosition(centerWindow);
     window.setKeyRepeatEnabled(true);
+    //Create YT button
     sf::Sprite youtube;
     sf::Texture youtubeT;
     youtubeT.loadFromFile("assets/youtube.png");
@@ -134,6 +147,8 @@ int main()
     youtube.setScale(.05, .05);
     youtube.setPosition(1420.f, 20.f);
 
+    //Load data
+    load(tree, playRanksHeap, window);
     Play * curr = playRanksHeap.top();
     playRanksHeap.remove();
     while (window.isOpen())
