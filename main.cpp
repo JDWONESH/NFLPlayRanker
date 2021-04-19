@@ -80,12 +80,25 @@ void load(AVLTree& tree, Heap& playRanksHeap)
     cout << tree.printInorder(tree.getRoot(), "");
 }
 
+// Draws current play rank to window
+void drawPlayRank(sf::RenderWindow& window, int rank) {
+	sf::Text playRank;
+    sf::Font font;
+    font.loadFromFile("assets/atlanta_book.ttf");
+	playRank.setFont(font);
+    playRank.setCharacterSize(35);
+    playRank.setString("#" + to_string(rank));
+	playRank.setPosition(15.0f, 10.0f);
+    window.draw(playRank);
+}
+
 int main()
 {
     AVLTree tree;
     Heap playRanksHeap;
     stack<Play*> navStackBack;
     stack<Play*> navStackForward;
+    int playRank = 1;
     //Load data
     load(tree, playRanksHeap);
 
@@ -114,16 +127,19 @@ int main()
                         navStackBack.push(curr);
                         curr = playRanksHeap.top();
                         playRanksHeap.remove();
+                        playRank++;
                     } else {
                         navStackBack.push(curr);
                         curr = navStackForward.top();
                         navStackForward.pop();
+                        playRank++;
                     }
                 }
                 if (event.mouseButton.button == sf::Mouse::Right && !navStackBack.empty()) {
                     navStackForward.push(curr);
                     curr = navStackBack.top();
                     navStackBack.pop();
+                    playRank--;
                 }
             }
         }
@@ -131,6 +147,8 @@ int main()
         window.clear(sf::Color::Black);
         //Public function of play to draw its play data onto the screen
         curr->draw(window);
+        //Draws current play rank
+        drawPlayRank(window, playRank);
         window.display();
     }
 
