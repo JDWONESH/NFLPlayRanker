@@ -66,7 +66,7 @@ void load(AVLTree& tree, Heap& playRanksHeap)
         string playtype = vals[25];
         if(playtype.compare("pass") == 0 || playtype.compare("run") == 0 || playtype.compare("field_goal") == 0 || playtype.compare("kickoff") == 0 || playtype.compare("punt") == 0) {
 	        Play* play = new Play(vals[2], vals[3], vals[50], vals[51], vals[17], vals[12], vals[24], vals[18], vals[22], 
-		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93], vals[20]);
+		                vals[9], vals[26], vals[144], vals[25], vals[8], vals[16], vals[119], vals[137], vals[89], vals[92], vals[90], vals[93], vals[20], vals[4]);
             //Push into avl tree
             tree.insert(tree.getRoot(), play);
             // Push into max heap

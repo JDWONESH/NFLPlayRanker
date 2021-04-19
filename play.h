@@ -26,6 +26,7 @@ class Play
 	// Used for display
 	string homeTeam;
 	string awayTeam;
+	string teamWithBall;
 	string homeTeamScore;
 	string awayTeamScore;
 	string quarter;
@@ -38,7 +39,7 @@ class Play
 public:
 	//Constructor
 	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, 
-	string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_, string textTimeRemaining_);
+	string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_, string textTimeRemaining_, string teamWithBall_);
 	//Draws play data to the screen
 	void draw(sf::RenderWindow& window);
 	//Calculates influence

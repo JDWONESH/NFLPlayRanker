@@ -3,11 +3,12 @@
 Logos Play::nflLogos = Logos("assets/nfl_logos.png");
 
 Play::	Play(string homeTeam_, string awayTeam_, string homeTeamScore_, string awayTeamScore_, string quarter_, string timeRemaining_, string playDescription_, string down_, string ydsToGo_, 
-		string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_, string textTimeRemaining_)
+		string date_, string yardsGained_, string touchdown_, string playType_, string yrdLine_, string sp_, string interception_, string fumble_, string home_WP_Pre_, string home_WP_Post_, string away_WP_Pre_, string away_WP_Post_, string textTimeRemaining_, string teamWithBall_)
 {
 	// Assign Display Data
 	homeTeam = homeTeam_;
 	awayTeam = awayTeam_;
+	teamWithBall = teamWithBall_;
 	homeTeamScore = homeTeamScore_;
 	awayTeamScore = awayTeamScore_;
 	quarter = quarter_;
@@ -89,24 +90,45 @@ void Play::draw(sf::RenderWindow& window)
 {
 	sf::Vector2u windowSize = window.getSize();
 
-	sf::RectangleShape border(sf::Vector2f(4.0f * nflLogos.adjustedLength + 12.0f, nflLogos.adjustedLength));
+	sf::RectangleShape border(sf::Vector2f(4.0f * nflLogos.adjustedLength + 36.0f, nflLogos.adjustedLength));
 	border.setFillColor(sf::Color::Black);
 	border.setOutlineThickness(12.0f);
 	border.setOutlineColor(sf::Color::White);
 	border.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(border);
-	sf::FloatRect borderRect = border.getLocalBounds();
-	border.setOrigin(borderRect.left + borderRect.width / 2.0f, borderRect.top + borderRect.height / 2.0f);
-	border.setPosition(windowSize.x / 2.0f, windowSize.y - (borderRect.height / 2.0f));
+
+	sf::RectangleShape timeBorder(sf::Vector2f(4.0f * nflLogos.adjustedLength - 12.0f, nflLogos.adjustedLength));
+	sf::FloatRect borderRect = timeBorder.getLocalBounds();
+	timeBorder.setOrigin(borderRect.left + borderRect.width / 2.0f, borderRect.top + borderRect.height / 2.0f);
+	timeBorder.setPosition(windowSize.x / 2.0f, windowSize.y - ((borderRect.height / 2.0f) + 12.0f));
+	timeBorder.setFillColor(sf::Color::Black);
+	timeBorder.setOutlineThickness(12.0f);
+	timeBorder.setOutlineColor(sf::Color::White);
+	window.draw(timeBorder);
+
+	border.setPosition(windowSize.x - 512.0f, windowSize.y - (borderRect.height + 12.0f));
 	window.draw(border);
-	border.setPosition(windowSize.x - 250.0f, windowSize.y - (borderRect.height / 2.0f));
-	window.draw(border);
+
 	sf::RectangleShape bigBorder(sf::Vector2f(windowSize.x - 24.0f, windowSize.y - 153.0f));
 	bigBorder.setPosition(12.0f, 12.0f);
 	bigBorder.setFillColor(sf::Color::Black);
 	bigBorder.setOutlineThickness(12.0f);
 	bigBorder.setOutlineColor(sf::Color::White);
 	window.draw(bigBorder);
+
+	sf::RectangleShape ball(sf::Vector2f(12.0f + (2.0f * nflLogos.adjustedLength), nflLogos.adjustedLength));
+	ball.setFillColor(sf::Color::Black);
+	ball.setOutlineThickness(12.0f);
+	ball.setOutlineColor(sf::Color{255, 215, 0});
+	if (teamWithBall == awayTeam)
+	{
+		ball.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
+	}
+	else
+	{
+		ball.setPosition(36.0f + (2.0f * nflLogos.adjustedLength), windowSize.y - (nflLogos.adjustedLength + 12.0f));
+	}
+	window.draw(ball);
 
 	sf::Sprite& awayLogo = nflLogos.getTeamLogo(awayTeam);
 	awayLogo.setPosition(12.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
@@ -123,7 +145,7 @@ void Play::draw(sf::RenderWindow& window)
 	window.draw(awayScore);
 
 	sf::Sprite& homeLogo = nflLogos.getTeamLogo(homeTeam);
-	homeLogo.setPosition(12.0f + nflLogos.adjustedLength * 2, windowSize.y - (nflLogos.adjustedLength + 12.0f));
+	homeLogo.setPosition(36.0f + nflLogos.adjustedLength * 2.0f, windowSize.y - (nflLogos.adjustedLength + 12.0f));
 	window.draw(homeLogo);
 	
 	sf::Text homeScore;
@@ -133,7 +155,7 @@ void Play::draw(sf::RenderWindow& window)
 	homeScore.setFillColor(sf::Color::White);
 	sf::FloatRect homeScoreRect = homeScore.getLocalBounds();
 	homeScore.setOrigin(homeScoreRect.left + homeScoreRect.width / 2.0f, homeScoreRect.top + homeScoreRect.height / 2.0f);
-	homeScore.setPosition(12.0f + nflLogos.adjustedLength * 3.5f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
+	homeScore.setPosition(36.0f + nflLogos.adjustedLength * 3.5f, windowSize.y - (nflLogos.adjustedLength * 0.5f + 12.0f));
 	window.draw(homeScore);
 
 	sf::Text quarterText;
@@ -166,8 +188,16 @@ void Play::draw(sf::RenderWindow& window)
 	int large = 0;
 	if (playDescription.size() > 120)
 	{
-		playDesc.setCharacterSize(60);
-		large = 12;
+		if (playDescription.size() > 240)
+		{
+			playDesc.setCharacterSize(40);
+			large = 24;
+		}
+		else
+		{
+			playDesc.setCharacterSize(60);
+			large = 12;
+		}
 	}
 	else
 	{
@@ -230,7 +260,7 @@ void Play::draw(sf::RenderWindow& window)
 		downText.setCharacterSize(100);
 		sf::FloatRect downRect = downText.getLocalBounds();
 		downText.setOrigin(downRect.left + downRect.width / 2.0f, downRect.top + downRect.height / 2.0f);
-		downText.setPosition(windowSize.x - 250.0f, windowSize.y - (borderRect.height / 2.0f));
+		downText.setPosition(windowSize.x - 262.0f, windowSize.y - ((borderRect.height / 2.0f) + 12.0f));
 		window.draw(downText);
 	}
 }
